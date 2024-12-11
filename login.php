@@ -65,6 +65,10 @@ session_start();
         }
     </style>
 </head>
+
+
+<!-- used llm to create the visuals for login and register -->
+<!-- took a break -->
 <body>
     <div class="container">
         <!-- Login Section -->
