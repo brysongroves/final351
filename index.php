@@ -17,15 +17,16 @@
     </style>
 </head>
 <body>
-    <header>
-        
-        
-        <nav><p></p>
-            <button style="background-color: darkgreen; color: white; border-color: gray; padding: 20px 25px; font-size: 16px; cursor: pointer;" onclick="window.location.href='tracking.php';">
-                Track Macros
-            </button>
-        </p></nav>
-    </header>
+    <!-- llm polished this up, looks much better -->
+<header style="border: 2px solid white; border-radius: 8px; padding: 20px; text-align: center; background-color: #f4f4f4; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+    <nav>
+        <h1 style="color: green; font-family: Arial, sans-serif; margin-bottom: 20px;">Bryson's Nutrition Tracker</h1>
+        <button style="background-color: darkgreen; color: white; border: none; border-radius: 12px; padding: 15px 20px; font-size: 16px; cursor: pointer; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);" onclick="window.location.href='tracking.php';">
+            Track Macros
+        </button>
+    </nav>
+</header>
+
     <main>
 
         <section class="dailys">
