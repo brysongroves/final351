@@ -29,22 +29,22 @@
     <main>
 
         <section class="dailys">
-            <h2>Daily Recipes </h2>
-            Today's 3 recipes
+            <h2 style="text-align: center;">Daily Recipes </h2>
+            <p style="text-align: center;">Today's 3 recipes</p>
 
             <!-- i used llm to format following block of code-->
-            <div class="container" style="display: flex; justify-content: center; gap: 20px; text-align: center; margin-top: 20px;">
-                <div class="item" style="width: 150px;">
+            <div class="container" style="display: flex; justify-content: center; gap: 100px; text-align: center; margin-top: 20px;">
+                <div class="item" style="width: 190px;">
                     <img src="pasta.jpg" alt="Image 1" style="width: 100%; border-radius: 8px;">
                     <p>Four Cheese Pasta</p>
                     <button style="margin-top: 10px; padding: 5px 10px; background-color: darkgreen; color: white; border: none; border-radius: 5px; cursor: pointer;">Add Recipe</button>
                 </div>
-                <div class="item" style="width: 150px;">
+                <div class="item" style="width: 190px;">
                     <img src="sushi.jpg" alt="Image 2" style="width: 100%; border-radius: 8px;">
                     <p>Tango Roll</p>
                     <button style="margin-top: 10px; padding: 5px 10px; background-color: darkgreen; color: white; border: none; border-radius: 5px; cursor: pointer;">Add Recipe</button>
                 </div>
-                <div class="item" style="width: 150px;">
+                <div class="item" style="width: 190px;">
                     <img src="glorp.jpg" alt="Image 3" style="width: 100%; border-radius: 8px;">
                     <p>Zlorpian Stew</p>
                     <button style="margin-top: 10px; padding: 5px 10px; background-color: darkgreen; color: white; border: none; border-radius: 5px; cursor: pointer;">Add Recipe</button>
