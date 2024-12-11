@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>About Penguins</title>
+    <title>Nutrition Tracker</title>
     <link rel="stylesheet" href="styles.css">
     <style>
     header {
