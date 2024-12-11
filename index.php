@@ -17,11 +17,28 @@
     </style>
 </head>
 <body>
-    <!-- llm polished this up, looks much better -->
+    <!-- llm polished this up, looks much better, also added mouse hovering animation -->
 <header style="border: 2px solid white; border-radius: 8px; padding: 20px; text-align: center; background-color: #f4f4f4; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
     <nav>
-        <h1 style="color: green; font-family: Arial, sans-serif; margin-bottom: 20px;">Bryson's Nutrition Tracker</h1>
-        <button style="background-color: darkgreen; color: white; border: none; border-radius: 12px; padding: 15px 20px; font-size: 16px; cursor: pointer; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);" onclick="window.location.href='tracking.php';">
+    <h1 style="color: green; font-family: Arial, sans-serif; margin-bottom: 20px;">Bryson's Nutrition Tracker</h1>
+        <style>
+            button {
+                background-color: darkgreen;
+                color: white;
+                border: none;
+                border-radius: 12px;
+                padding: 15px 20px;
+                font-size: 16px;
+                cursor: pointer;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+                transition: transform 0.2s ease, box-shadow 0.2s ease; /* Smooth transition for hover effects */
+            }
+            button:hover {
+                transform: scale(1.1); /* Increases size by 10% */
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Adds a stronger shadow on hover */
+            }
+        </style>
+        <button onclick="window.location.href='tracking.php';">
             Track Macros
         </button>
     </nav>
