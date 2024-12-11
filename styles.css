@@ -42,10 +42,10 @@ header {
 
 main {
     padding: 20px;
-    background-color: rgba(113, 185, 210, 0.7);
+    background-color: rgba(93, 180, 98, 0.7);
 }
 
-.about-me, .projects, .collections, .adventure, .weapons, .report, .questions{
+.about-me, .projects, .collections, .about, .dailys, .report, .questions{
     background-color: #f0f8ff;
     padding: 20px;
     padding-left: 40px;
@@ -67,7 +67,7 @@ main {
     background-blend-mode: overlay;
 }
 
-.adventure {
+.about {
     background-image: url('fantasy-land.jpg');
     background-size: cover;
     background-position: center;
