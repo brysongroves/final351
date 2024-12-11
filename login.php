@@ -1,6 +1,16 @@
 <?php
-/* Start the session for login handling */
-session_start();
+
+$host = 'localhost';
+$user = 'root'; 
+$pass = 'mysql'; 
+$dbname = '351final';
+
+try {
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $user, $pass);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Connection failed: " . $e->getMessage());
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -65,30 +75,46 @@ session_start();
         }
     </style>
 </head>
-
-
-<!-- used llm to create the visuals for login and register -->
-<!-- took a break -->
 <body>
     <div class="container">
         <!-- Login Section -->
         <div class="login">
             <h2>Login</h2>
-            <form action="process_login.php" method="post">
+            <form action="" method="post">
                 <label for="username">Username</label>
                 <input type="text" id="username" name="username" required>
                 
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" required>
                 
-                <button type="submit">Login</button>
+                <button type="submit" name="login">Login</button>
             </form>
+            <?php
+            if (isset($_POST['login'])) {
+                $username = $_POST['username'];
+                $password = $_POST['password'];
+
+                $stmt = $pdo->prepare("SELECT * FROM users WHERE username = :username");
+                $stmt->bindValue(':username', $username, PDO::PARAM_STR);
+                $stmt->execute();
+                $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                if ($user && password_verify($password, $user['password'])) {
+                    $_SESSION['loggedin'] = true;
+                    $_SESSION['username'] = $username;
+                    header('Location: index.php');
+                    exit;
+                } else {
+                    echo "<p style='color: red; text-align: center;'>Invalid username or password.</p>";
+                }
+            }
+            ?>
         </div>
 
         <!-- Register Section -->
         <div class="register">
             <h2>Register</h2>
-            <form action="process_register.php" method="post">
+            <form action="" method="post">
                 <label for="new_username">Username</label>
                 <input type="text" id="new_username" name="new_username" required>
 
@@ -98,8 +124,28 @@ session_start();
                 <label for="confirm_password">Verify Password</label>
                 <input type="password" id="confirm_password" name="confirm_password" required>
                 
-                <button type="submit">Register</button>
+                <button type="submit" name="register">Register</button>
             </form>
+            <?php
+            if (isset($_POST['register'])) {
+                $new_username = $_POST['new_username'];
+                $new_password = $_POST['new_password'];
+                $confirm_password = $_POST['confirm_password'];
+
+                if ($new_password !== $confirm_password) {
+                    echo "<p style='color: red; text-align: center;'>Passwords do not match.</p>";
+                } else {
+                    $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
+                    $stmt = $pdo->prepare("INSERT INTO users (username, password) VALUES (:username, :password)");
+                    $stmt->bindValue(':username', $new_username, PDO::PARAM_STR);
+                    $stmt->bindValue(':password', $hashed_password, PDO::PARAM_STR);
+
+                    if ($stmt->execute()) {
+                        echo "<p style='color: green; text-align: center;'>Account Created!</p>";
+                    }
+                }
+            }
+            ?>
         </div>
     </div>
 </body>
