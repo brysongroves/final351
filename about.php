@@ -13,6 +13,19 @@ try {
 } catch (PDOException $e) {
     die("Connection failed: " . $e->getMessage());
 }
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $subject = $_POST['subject'];
+    $problem = $_POST['problem'];
+
+    $stmt = $pdo->prepare("INSERT INTO questions (subject, problem) VALUES (:subject, :problem)");
+    $stmt->bindValue(':subject', $subject, PDO::PARAM_STR);
+    $stmt->bindValue(':problem', $problem, PDO::PARAM_STR);
+
+    if ($stmt->execute()) {
+        $message = "Sent!";
+    } 
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -78,6 +91,23 @@ try {
     </style>
 </head>
 <body>
-    
-</body>
-</html>
+
+<!-- llm created the text boxes, & they suck -->
+<div class="container">
+        <h2>Submit Your Question / Issue</h2>
+        <?php if (isset($message)): ?>
+            <p class="message"><?php echo htmlspecialchars($message); ?></p>
+        <?php endif; ?>
+        <form action="" method="post">
+            <label for="subject">Subject</label>
+            <input type="text" id="subject" name="subject" required>
+
+            <label for="problem">Problem</label>
+            <textarea id="problem" name="problem" required></textarea>
+
+            <button type="submit">Send</button>
+        </form>
+    </div>
+    </body>
+
+<?php
