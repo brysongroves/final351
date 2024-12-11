@@ -89,6 +89,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             height: 150px;
             resize: none;
         }
+
+        .back-button {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: darkgreen;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 15px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        
         button {
             width: 100%;
             padding: 10px;
@@ -116,6 +131,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <!-- llm created the text boxes, & they suck -->
  <!-- ok, it fixed some of the parameters for the design and it looks much better. -->
 <div class="container">
+        <button class="back-button" onclick="window.location.href='index.php';">Back to Home</button>
         <h2>Submit Your Question / Issue</h2>
         <?php if (isset($message)): ?>
             <p class="message"><?php echo htmlspecialchars($message); ?></p>
