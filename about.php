@@ -43,18 +43,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             background-position: center;
         }
         .container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 100vh;
-            padding: 0 50px;
-        }
-        .login, .register {
+            max-width: 600px;
+            margin: 50px auto;
             background-color: rgba(255, 255, 255, 0.8);
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            width: 40%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        .header {
+            text-align: center;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            width: 100%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+        }
+        h1 {
+            color: darkgreen;
         }
         h2 {
             margin-top: 0;
@@ -66,13 +77,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             margin: 10px 0 5px;
             color: #333;
         }
-        input[type="text"], input[type="password"] {
+        input[type="text"], textarea {
             width: 100%;
             padding: 10px;
             margin-bottom: 15px;
             border: 1px solid #ccc;
             border-radius: 4px;
             font-size: 14px;
+        }
+        textarea {
+            height: 150px;
+            resize: none;
         }
         button {
             width: 100%;
@@ -88,11 +103,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         button:hover {
             background-color: green;
         }
+        .message {
+            text-align: center;
+            font-size: 16px;
+            margin-bottom: 20px;
+            color: darkgreen;
+        }
     </style>
 </head>
 <body>
 
 <!-- llm created the text boxes, & they suck -->
+ <!-- ok, it fixed some of the parameters for the design and it looks much better. -->
 <div class="container">
         <h2>Submit Your Question / Issue</h2>
         <?php if (isset($message)): ?>
