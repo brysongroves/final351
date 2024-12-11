@@ -8,7 +8,7 @@
     <style>
     header {
         background-image: url('mainlogo.jpg');
-        background-size: 80%;
+        background-size: 85%;
         background-position: center;
         background-color: rgba(255, 255, 255, 0.3); /* subtle overlay */
         background-blend-mode: overlay;
