@@ -41,6 +41,9 @@
         <button onclick="window.location.href='tracking.php';">
             Track Macros
         </button>
+        <button style="position: absolute; top: 20px; right: 20px; background-color: darkgreen; color: white; border: none; border-radius: 12px; padding: 10px 15px; font-size: 14px; cursor: pointer; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); transition: transform 0.2s ease, box-shadow 0.2s ease;" onclick="window.location.href='login.php';">
+        Login
+    </button>
     </nav>
 </header>
 
@@ -74,7 +77,7 @@
             <h2 style="text-align: center;">Why Use Our Tracker?</h2>
             <table>
                 <tr>
-                <td style="padding: 20px;">When you use Bryson's Nutrition Tracker, you are able to keep track of your macros all in one convienint place. And this can be even more accurate when paired with a basic food scale. </td></tr>
+                <td style="padding: 60px;">When you use Bryson's Nutrition Tracker, you are able to keep track of your macros all in one convienint place. And this can be even more accurate when paired with a basic food scale. </td></tr>
             </table>
         </section>
 
