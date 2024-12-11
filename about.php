@@ -91,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         .back-button {
-            position: absolute;
+            position: left;
             top: 10px;
             left: 10px;
             background-color: darkgreen;
