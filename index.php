@@ -1,5 +1,5 @@
-<!-- Bryson Groves -->
-<!-- CS 351 Final -->
+<?php
+ ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -64,7 +64,7 @@
     </main>
     <footer>
         <nav><p></p>| 
-            <a href="about.html">Help</a> | 
+            <a href="about.php">Help</a> | 
             
         </p></nav>
     </footer>
