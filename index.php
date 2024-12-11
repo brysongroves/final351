@@ -77,7 +77,7 @@
             <h2 style="text-align: center;">Why Use Our Tracker?</h2>
             <table>
                 <tr>
-                <td style="padding: 60px;">When you use Bryson's Nutrition Tracker, you are able to keep track of your macros all in one convienint place. And this can be even more accurate when paired with a basic food scale. </td></tr>
+                <td style="text-align: center">When you use Bryson's Nutrition Tracker, you are able to keep track of your macros all in one convienint place. And this can be even more accurate when paired with a basic food scale. </td></tr>
             </table>
         </section>
 
