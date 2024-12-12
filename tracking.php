@@ -72,6 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['adjust_size'])) {
     $recipe_id = (int)$_POST['recipe'];
     $new_size = (int)$_POST['new_size'];
 
+    // Fetch the selected recipe
     $fetch_recipe_sql = "SELECT * FROM recipes WHERE id = :id";
     $stmt = $pdo->prepare($fetch_recipe_sql);
     $stmt->execute(['id' => $recipe_id]);
@@ -81,8 +82,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['adjust_size'])) {
         $size_ratio = $new_size / $selected_recipe['size'];
         $adjusted_fats = round($selected_recipe['fats'] * $size_ratio);
         $adjusted_carbs = round($selected_recipe['carbs'] * $size_ratio);
-        $adjusted_protien = round($selected_recipe['protien'] * $size_ratio);
+        $adjusted_protein = round($selected_recipe['protien'] * $size_ratio);
 
+        // Debug: Print values before inserting
+        echo "<pre>";
+        echo "Name: {$selected_recipe['name']}\n";
+        echo "Fats: $adjusted_fats\n";
+        echo "Carbs: $adjusted_carbs\n";
+        echo "Protein: $adjusted_protein\n";
+        echo "</pre>";
+
+        // Insert adjusted data into the adjusted table
         try {
             $insert_adjusted_sql = "INSERT INTO adjusted (name, fats, carbs, protein) VALUES (:name, :fats, :carbs, :protein)";
             $stmt_insert_adjusted = $pdo->prepare($insert_adjusted_sql);
@@ -90,10 +100,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['adjust_size'])) {
                 ':name' => $selected_recipe['name'],
                 ':fats' => $adjusted_fats,
                 ':carbs' => $adjusted_carbs,
-                ':protein' => $adjusted_protien,
+                ':protein' => $adjusted_protein,
             ]);
 
-            echo "<p style='color: green;'>Adjusted values for {$selected_recipe['name']} saved successfully.</p>";
+            echo "<p style='color: green;'>Adjusted data inserted successfully for '{$selected_recipe['name']}'.</p>";
         } catch (PDOException $e) {
             echo "<p style='color: red;'>Error inserting adjusted data: " . $e->getMessage() . "</p>";
         }
@@ -102,19 +112,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['adjust_size'])) {
     }
 }
 
-try {
-    $fetch_adjusted_sql = "SELECT * FROM adjusted";
-    $stmt_adjusted = $pdo->query($fetch_adjusted_sql);
-    $adjusted_recipes = $stmt_adjusted->fetchAll();
-
-    if ($adjusted_recipes) {
-        echo "<p style='color: green;'>Adjusted recipes fetched successfully.</p>";
-    } else {
-        echo "<p style='color: red;'>No data found in the adjusted table.</p>";
-    }
-} catch (PDOException $e) {
-    echo "<p style='color: red;'>Error fetching adjusted data: " . $e->getMessage() . "</p>";
-}
 
 ?>
 <!DOCTYPE html>
@@ -331,22 +328,21 @@ try {
         </div>
     </div>
 
-    <div class="ratio-container" style="margin: 20px auto; text-align: center; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-    <h2>Adjust Recipe Size</h2>
-    <form action="" method="post">
-        <label for="recipe">Select Recipe</label>
-        <select id="recipe" name="recipe" style="padding: 10px; margin: 10px; width: 300px;">
-            <?php foreach ($recipes as $recipe): ?>
-                <option value="<?php echo $recipe['id']; ?>"><?php echo htmlspecialchars($recipe['name']); ?></option>
-            <?php endforeach; ?>
-        </select>
-        <label for="new_size">Enter New Size (grams)</label>
-        <input type="number" id="new_size" name="new_size" style="padding: 10px; margin: 10px; width: 300px;" required>
-        <button type="submit" name="adjust_size" style="padding: 10px 15px; background-color: darkgreen; color: white; border: none; border-radius: 4px; cursor: pointer;">Adjust</button>
-    </form>
+        <div class="ratio-container" style="margin: 20px auto; text-align: center; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+        <h2>Adjust Recipe Size</h2>
+        <form action="" method="post">
+            <label for="recipe">Select Recipe</label>
+            <select id="recipe" name="recipe" style="padding: 10px; margin: 10px; width: 300px;">
+                <?php foreach ($recipes as $recipe): ?>
+                    <option value="<?php echo $recipe['id']; ?>"><?php echo htmlspecialchars($recipe['name']); ?></option>
+                <?php endforeach; ?>
+            </select>
+            <label for="new_size">Enter New Size (grams)</label>
+            <input type="number" id="new_size" name="new_size" style="padding: 10px; margin: 10px; width: 300px;" required>
+            <button type="submit" name="adjust_size" style="padding: 10px 15px; background-color: darkgreen; color: white; border: none; border-radius: 4px; cursor: pointer;">Adjust</button>
+        </form>
+    </div>
 
-    
-</div>
 
 
 <!-- llm created this here, but isnt displaying the calculated ratios -->
