@@ -72,21 +72,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['adjust_size'])) {
     $recipe_id = (int)$_POST['recipe'];
     $new_size = (int)$_POST['new_size'];
 
-    // Fetch the selected recipe
     $fetch_recipe_sql = "SELECT * FROM recipes WHERE id = :id";
     $stmt = $pdo->prepare($fetch_recipe_sql);
     $stmt->execute(['id' => $recipe_id]);
     $selected_recipe = $stmt->fetch();
 
     if ($selected_recipe) {
-        // Calculate new values based on size ratio
         $size_ratio = $new_size / $selected_recipe['size'];
-        $adjusted_calories = round($selected_recipe['calories'] * $size_ratio);
         $adjusted_fats = round($selected_recipe['fats'] * $size_ratio);
         $adjusted_carbs = round($selected_recipe['carbs'] * $size_ratio);
         $adjusted_protien = round($selected_recipe['protien'] * $size_ratio);
 
-        // Insert the adjusted data into the 'adjusted' table
         try {
             $insert_adjusted_sql = "INSERT INTO adjusted (name, fats, carbs, protein) VALUES (:name, :fats, :carbs, :protein)";
             $stmt_insert_adjusted = $pdo->prepare($insert_adjusted_sql);
@@ -97,20 +93,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['adjust_size'])) {
                 ':protein' => $adjusted_protien,
             ]);
 
-            echo "<h3>Adjusted values saved successfully for '{$selected_recipe['name']}'</h3>";
+            echo "<p style='color: green;'>Adjusted values for {$selected_recipe['name']} saved successfully.</p>";
         } catch (PDOException $e) {
-            echo "<p style='color: red;'>Error saving adjusted data: " . $e->getMessage() . "</p>";
+            echo "<p style='color: red;'>Error inserting adjusted data: " . $e->getMessage() . "</p>";
         }
-
-        // Display adjusted values on the screen
-        echo "<h3>Adjusted Values for '{$selected_recipe['name']}'</h3>";
-        echo "<p>Calories: $adjusted_calories</p>";
-        echo "<p>Fats: $adjusted_fats</p>";
-        echo "<p>Carbs: $adjusted_carbs</p>";
-        echo "<p>Protein: $adjusted_protien</p>";
     } else {
         echo "<p style='color: red;'>Recipe not found.</p>";
     }
+}
+
+try {
+    $fetch_adjusted_sql = "SELECT * FROM adjusted";
+    $stmt_adjusted = $pdo->query($fetch_adjusted_sql);
+    $adjusted_recipes = $stmt_adjusted->fetchAll();
+
+    if ($adjusted_recipes) {
+        echo "<p style='color: green;'>Adjusted recipes fetched successfully.</p>";
+    } else {
+        echo "<p style='color: red;'>No data found in the adjusted table.</p>";
+    }
+} catch (PDOException $e) {
+    echo "<p style='color: red;'>Error fetching adjusted data: " . $e->getMessage() . "</p>";
 }
 
 ?>
