@@ -59,18 +59,51 @@
                 <div class="item" style="width: 190px;">
                     <img src="pasta.jpg" alt="Image 1" style="width: 100%; border-radius: 8px;">
                     <p>Four Cheese Pasta</p>
-                    <button style="margin-top: 10px; padding: 5px 10px; background-color: darkgreen; color: white; border: none; border-radius: 5px; cursor: pointer;">Add Recipe</button>
-                </div>
+                    <?php>
+                    <form action="" method="post">
+                    <input type="hidden" name="name" value="Four Cheese Pasta">
+                    <input type="hidden" name="calories" value="500">
+                    <input type="hidden" name="fats" value="20">
+                    <input type="hidden" name="carbs" value="50">
+                    <input type="hidden" name="protien" value="15">
+                    <input type="hidden" name="ingredients" value="Cheese, Pasta, Cream">
+                    <input type="hidden" name="size" value="Medium">
+                    <button type="submit" style="margin-top: 10px; padding: 5px 10px; background-color: darkgreen; color: white; border: none; border-radius: 5px; cursor: pointer;">Add Recipe</button>
+                    </form>
+                    ?>
+                    </div>
                 <div class="item" style="width: 190px;">
                     <img src="sushi.jpg" alt="Image 2" style="width: 100%; border-radius: 8px;">
                     <p>Tango Roll</p>
-                    <button style="margin-top: 10px; padding: 5px 10px; background-color: darkgreen; color: white; border: none; border-radius: 5px; cursor: pointer;">Add Recipe</button>
-                </div>
+                    <?php>
+                    <form action="" method="post">
+                    <input type="hidden" name="name" value="Tango Roll">
+                    <input type="hidden" name="calories" value="500">
+                    <input type="hidden" name="fats" value="20">
+                    <input type="hidden" name="carbs" value="50">
+                    <input type="hidden" name="protien" value="15">
+                    <input type="hidden" name="ingredients" value="Cheese, Pasta, Cream">
+                    <input type="hidden" name="size" value="Medium">
+                    <button type="submit" style="margin-top: 10px; padding: 5px 10px; background-color: darkgreen; color: white; border: none; border-radius: 5px; cursor: pointer;">Add Recipe</button>
+                    </form>
+                    ?>
+                    </div>
                 <div class="item" style="width: 190px;">
                     <img src="glorp.jpg" alt="Image 3" style="width: 100%; border-radius: 8px;">
                     <p>Zlorpian Stew</p>
-                    <button style="margin-top: 10px; padding: 5px 10px; background-color: darkgreen; color: white; border: none; border-radius: 5px; cursor: pointer;">Add Recipe</button>
-                </div>
+                    <?php>
+                    <form action="" method="post">
+                    <input type="hidden" name="name" value="Zlorpian Stew">
+                    <input type="hidden" name="calories" value="500">
+                    <input type="hidden" name="fats" value="20">
+                    <input type="hidden" name="carbs" value="50">
+                    <input type="hidden" name="protien" value="15">
+                    <input type="hidden" name="ingredients" value="Cheese, Pasta, Cream">
+                    <input type="hidden" name="size" value="Medium">
+                    <button type="submit" style="margin-top: 10px; padding: 5px 10px; background-color: darkgreen; color: white; border: none; border-radius: 5px; cursor: pointer;">Add Recipe</button>
+                    </form>
+                    ?>
+                    </div>
             </div>
         </section>
         
