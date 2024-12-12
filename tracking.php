@@ -154,13 +154,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         button.submit-btn:hover {
             background-color: green;
         }
+
+        .hover-cell {
+            position: relative;
+        }
+        .hover-cell button {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        .hover-cell:hover button {
+            display: block;
+        }
     </style>
 </head>
 
 
 <!-- created table display and entry box, and had gpt split it into sections and format it -->
-
-finding way to add sleek delete button
 
 <body>
     <div class="header">
@@ -195,7 +213,16 @@ finding way to add sleek delete button
                     <?php if ($recipes): ?>
                         <?php foreach ($recipes as $recipe): ?>
                             <tr>
-                                <td><?php echo htmlspecialchars($recipe['name']); ?></td>
+                            <tr>
+                                
+                                <td class="hover-cell">
+                                    <?php echo htmlspecialchars($recipe['name']); ?>
+                                    <form action="" method="post" style="display:inline;">
+                                        <input type="hidden" name="delete_id" value="<?php echo $recipe['id']; ?>">
+                                        <button type="submit">Remove</button>
+                                    </form>
+                                </td>
+                                
                                 <td><?php echo htmlspecialchars($recipe['calories']); ?></td>
                                 <td><?php echo htmlspecialchars($recipe['fats']); ?></td>
                                 <td><?php echo htmlspecialchars($recipe['carbs']); ?></td>
