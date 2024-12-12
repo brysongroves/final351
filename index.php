@@ -1,5 +1,75 @@
 <?php
- ?>
+$host = 'localhost'; 
+$dbname = '351final'; 
+$user = 'root'; 
+$pass = 'mysql';
+$charset = 'utf8mb4';
+
+$dsn = "mysql:host=$host;dbname=$dbname;charset=$charset";
+$options = [
+    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    PDO::ATTR_EMULATE_PREPARES   => false,
+];
+
+try {
+    $pdo = new PDO($dsn, $user, $pass, $options);
+} catch (PDOException $e) {
+    throw new PDOException($e->getMessage(), (int)$e->getCode());
+}
+
+$search = '';
+if (isset($_GET['search'])) {
+    $search = $_GET['search'];
+}
+
+$query = "SELECT * FROM recipes";
+if ($search) {
+    $query .= " WHERE name LIKE :search";
+}
+$stmt = $pdo->prepare($query);
+if ($search) {
+    $stmt->bindValue(':search', "%$search%", PDO::PARAM_STR);
+}
+$stmt->execute();
+$recipes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['name']) && isset($_POST['calories']) && isset($_POST['fats']) && isset($_POST['carbs']) && isset($_POST['protien']) && isset($_POST['ingredients']) && isset($_POST['size'])) {
+        // Insert new recipe
+        $name = htmlspecialchars($_POST['name']);
+        $calories = (int) $_POST['calories'];
+        $fats = (int) $_POST['fats'];
+        $carbs = (int) $_POST['carbs'];
+        $protien = (int) $_POST['protien'];
+        $ingredients = htmlspecialchars($_POST['ingredients']);
+        $size = htmlspecialchars($_POST['size']);
+
+        $insert_sql = 'INSERT INTO recipes (name, calories, fats, carbs, protien, ingredients, size) VALUES (:name, :calories, :fats, :carbs, :protien, :ingredients, :size)';
+        $stmt_insert = $pdo->prepare($insert_sql);
+        $stmt_insert->execute([
+            'name' => $name,
+            'calories' => $calories,
+            'fats' => $fats,
+            'carbs' => $carbs,
+            'protien' => $protien,
+            'ingredients' => $ingredients,
+            'size' => $size
+        ]);
+    } elseif (isset($_POST['delete_id'])) {
+        // Delete a recipe
+        $delete_id = (int) $_POST['delete_id'];
+
+        $delete_sql = 'DELETE FROM recipes WHERE id = :id';
+        $stmt_delete = $pdo->prepare($delete_sql);
+        $stmt_delete->execute(['id' => $delete_id]);
+    }
+    header("Location: " . $_SERVER['PHP_SELF']);
+    exit;
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -50,62 +120,62 @@
 
     <main>
 
-        <section class="dailys">
-            <h2 style="text-align: center;">Daily Recipes </h2>
-            <p style="text-align: center;">Today's 3 recipes</p>
+    <section class="dailys">
+    <h2 style="text-align: center;">Daily Recipes</h2>
+    <p style="text-align: center;">Today's 3 recipes</p>
 
-            <!-- i used llm to format following block of code-->
-            <div class="container" style="display: flex; justify-content: center; gap: 100px; text-align: center; margin-top: 20px;">
-                <div class="item" style="width: 190px;">
-                    <img src="pasta.jpg" alt="Image 1" style="width: 100%; border-radius: 8px;">
-                    <p>Four Cheese Pasta</p>
-                    <?php
-                    <form action="" method="post">
-                    <input type="hidden" name="name" value="Four Cheese Pasta">
-                    <input type="hidden" name="calories" value="500">
-                    <input type="hidden" name="fats" value="20">
-                    <input type="hidden" name="carbs" value="50">
-                    <input type="hidden" name="protien" value="15">
-                    <input type="hidden" name="ingredients" value="Cheese, Pasta, Cream">
-                    <input type="hidden" name="size" value="Medium">
-                    <button type="submit" style="margin-top: 10px; padding: 5px 10px; background-color: darkgreen; color: white; border: none; border-radius: 5px; cursor: pointer;">Add Recipe</button>
-                    </form>
-                    ?>
-                    </div>
-                <div class="item" style="width: 190px;">
-                    <img src="sushi.jpg" alt="Image 2" style="width: 100%; border-radius: 8px;">
-                    <p>Tango Roll</p>
-                    <?php>
-                    <form action="" method="post">
-                    <input type="hidden" name="name" value="Tango Roll">
-                    <input type="hidden" name="calories" value="500">
-                    <input type="hidden" name="fats" value="20">
-                    <input type="hidden" name="carbs" value="50">
-                    <input type="hidden" name="protien" value="15">
-                    <input type="hidden" name="ingredients" value="Cheese, Pasta, Cream">
-                    <input type="hidden" name="size" value="Medium">
-                    <button type="submit" style="margin-top: 10px; padding: 5px 10px; background-color: darkgreen; color: white; border: none; border-radius: 5px; cursor: pointer;">Add Recipe</button>
-                    </form>
-                    ?>
-                    </div>
-                <div class="item" style="width: 190px;">
-                    <img src="glorp.jpg" alt="Image 3" style="width: 100%; border-radius: 8px;">
-                    <p>Zlorpian Stew</p
-                    <?php
-                    <form action="" method="post">
-                    <input type="hidden" name="name" value="Zlorpian Stew">
-                    <input type="hidden" name="calories" value="500">
-                    <input type="hidden" name="fats" value="20">
-                    <input type="hidden" name="carbs" value="50">
-                    <input type="hidden" name="protien" value="15">
-                    <input type="hidden" name="ingredients" value="Cheese, Pasta, Cream">
-                    <input type="hidden" name="size" value="Medium">
-                    <button type="submit" style="margin-top: 10px; padding: 5px 10px; background-color: darkgreen; color: white; border: none; border-radius: 5px; cursor: pointer;">Add Recipe</button>
-                    </form>
-                    ?>
-                    </div>
-            </div>
-        </section>
+    <div class="container" style="display: flex; justify-content: center; gap: 100px; text-align: center; margin-top: 20px;">
+
+        <!-- First Recipe -->
+        <div class="item" style="width: 190px;">
+            <img src="pasta.jpg" alt="Image 1" style="width: 100%; border-radius: 8px;">
+            <p>Four Cheese Pasta</p>
+            <form action="" method="post">
+                <input type="hidden" name="name" value="Four Cheese Pasta">
+                <input type="hidden" name="calories" value="500">
+                <input type="hidden" name="fats" value="20">
+                <input type="hidden" name="carbs" value="50">
+                <input type="hidden" name="protien" value="15">
+                <input type="hidden" name="ingredients" value="Cheese, Pasta, Cream">
+                <input type="hidden" name="size" value="550">
+                <button type="submit" style="margin-top: 10px; padding: 5px 10px; background-color: darkgreen; color: white; border: none; border-radius: 5px; cursor: pointer;">Add Recipe</button>
+            </form>
+        </div>
+
+        <!-- Second Recipe -->
+        <div class="item" style="width: 190px;">
+            <img src="sushi.jpg" alt="Image 2" style="width: 100%; border-radius: 8px;">
+            <p>Tango Roll</p>
+            <form action="" method="post">
+                <input type="hidden" name="name" value="Tango Roll">
+                <input type="hidden" name="calories" value="500">
+                <input type="hidden" name="fats" value="20">
+                <input type="hidden" name="carbs" value="50">
+                <input type="hidden" name="protien" value="15">
+                <input type="hidden" name="ingredients" value="Rice, Salmon, Avocado">
+                <input type="hidden" name="size" value="360">
+                <button type="submit" style="margin-top: 10px; padding: 5px 10px; background-color: darkgreen; color: white; border: none; border-radius: 5px; cursor: pointer;">Add Recipe</button>
+            </form>
+        </div>
+
+        <!-- Third Recipe -->
+        <div class="item" style="width: 190px;">
+            <img src="glorp.jpg" alt="Image 3" style="width: 100%; border-radius: 8px;">
+            <p>Zlorpian Stew</p>
+            <form action="" method="post">
+                <input type="hidden" name="name" value="Zlorpian Stew">
+                <input type="hidden" name="calories" value="500">
+                <input type="hidden" name="fats" value="20">
+                <input type="hidden" name="carbs" value="50">
+                <input type="hidden" name="protien" value="15">
+                <input type="hidden" name="ingredients" value="Alien Herbs, Broth, Mystery Meat">
+                <input type="hidden" name="size" value="700">
+                <button type="submit" style="margin-top: 10px; padding: 5px 10px; background-color: darkgreen; color: white; border: none; border-radius: 5px; cursor: pointer;">Add Recipe</button>
+            </form>
+        </div>
+    </div>
+</section>
+
         
         <section class="about">
             <h2 style="text-align: center;">Why Use Our Tracker?</h2>
