@@ -156,6 +156,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     </style>
 </head>
+
+
+<!-- created table display and entry box, and had gpt split it into sections and format it -->
+
 <body>
     <div class="header">
         <h1>Tracking Page</h1>
@@ -175,7 +179,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <table>
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        
                         <th>Name</th>
                         <th>Calories</th>
                         <th>Fats</th>
@@ -189,7 +193,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <?php if ($recipes): ?>
                         <?php foreach ($recipes as $recipe): ?>
                             <tr>
-                                <td><?php echo htmlspecialchars($recipe['id']); ?></td>
                                 <td><?php echo htmlspecialchars($recipe['name']); ?></td>
                                 <td><?php echo htmlspecialchars($recipe['calories']); ?></td>
                                 <td><?php echo htmlspecialchars($recipe['fats']); ?></td>
@@ -208,29 +211,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </table>
         </div>
 
-        <!-- Form Section -->
         <div class="form-container">
             <h2>Add a Recipe</h2>
             <form action="" method="post">
                 <label for="name">Name</label>
                 <input type="text" id="name" name="name" required>
-
                 <label for="calories">Calories</label>
                 <input type="number" id="calories" name="calories" required>
-
                 <label for="fats">Fats</label>
                 <input type="number" id="fats" name="fats" required>
-
                 <label for="carbs">Carbs</label>
                 <input type="number" id="carbs" name="carbs" required>
-
                 <label for="protien">Protein</label>
                 <input type="number" id="protien" name="protien" required>
-
                 <label for="ingredients">Ingredients</label>
                 <textarea id="ingredients" name="ingredients" required></textarea>
-
-                <label for="size">Size</label>
+                <label for="size">Size (grams)</label>
                 <input type="text" id="size" name="size" required>
 
                 <button type="submit" class="submit-btn">Submit</button>
