@@ -34,39 +34,9 @@ if ($search) {
 $stmt->execute();
 $recipes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['name']) && isset($_POST['calories']) && isset($_POST['fats']) && isset($_POST['carbs']) && isset($_POST['protien']) && isset($_POST['ingredients']) && isset($_POST['size'])) {
-        // Insert new recipe
-        $name = htmlspecialchars($_POST['name']);
-        $calories = (int) $_POST['calories'];
-        $fats = (int) $_POST['fats'];
-        $carbs = (int) $_POST['carbs'];
-        $protien = (int) $_POST['protien'];
-        $ingredients = htmlspecialchars($_POST['ingredients']);
-        $size = htmlspecialchars($_POST['size']);
-
-        $insert_sql = 'INSERT INTO recipes (name, calories, fats, carbs, protien, ingredients, size) VALUES (:name, :calories, :fats, :carbs, :protien, :ingredients, :size)';
-        $stmt_insert = $pdo->prepare($insert_sql);
-        $stmt_insert->execute([
-            'name' => $name,
-            'calories' => $calories,
-            'fats' => $fats,
-            'carbs' => $carbs,
-            'protien' => $protien,
-            'ingredients' => $ingredients,
-            'size' => $size
-        ]);
-    } elseif (isset($_POST['delete_id'])) {
-        // Delete a recipe
-        $delete_id = (int) $_POST['delete_id'];
-
-        $delete_sql = 'DELETE FROM recipes WHERE id = :id';
-        $stmt_delete = $pdo->prepare($delete_sql);
-        $stmt_delete->execute(['id' => $delete_id]);
-    }
-    header("Location: " . $_SERVER['PHP_SELF']);
-    exit;
-}
+// Adjusted values (initialize globally)
+$adjusted_values = null;
+$error_message = null;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['adjust_size'])) {
     $recipe_id = (int)$_POST['recipe'];
@@ -84,36 +54,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['adjust_size'])) {
         $adjusted_carbs = round($selected_recipe['carbs'] * $size_ratio);
         $adjusted_protein = round($selected_recipe['protien'] * $size_ratio);
 
-        // Debug: Print values before inserting
-        echo "<pre>";
-        echo "Name: {$selected_recipe['name']}\n";
-        echo "Fats: $adjusted_fats\n";
-        echo "Carbs: $adjusted_carbs\n";
-        echo "Protein: $adjusted_protein\n";
-        echo "</pre>";
-
-        // Insert adjusted data into the adjusted table
-        try {
-            $insert_adjusted_sql = "INSERT INTO adjusted (name, fats, carbs, protein) VALUES (:name, :fats, :carbs, :protein)";
-            $stmt_insert_adjusted = $pdo->prepare($insert_adjusted_sql);
-            $stmt_insert_adjusted->execute([
-                ':name' => $selected_recipe['name'],
-                ':fats' => $adjusted_fats,
-                ':carbs' => $adjusted_carbs,
-                ':protein' => $adjusted_protein,
-            ]);
-
-            echo "<p style='color: green;'>Adjusted data inserted successfully for '{$selected_recipe['name']}'.</p>";
-        } catch (PDOException $e) {
-            echo "<p style='color: red;'>Error inserting adjusted data: " . $e->getMessage() . "</p>";
-        }
+        // Store adjusted values for displaying
+        $adjusted_values = [
+            'name' => htmlspecialchars($selected_recipe['name']),
+            'fats' => $adjusted_fats,
+            'carbs' => $adjusted_carbs,
+            'protein' => $adjusted_protein
+        ];
     } else {
-        echo "<p style='color: red;'>Recipe not found.</p>";
+        $error_message = "Recipe not found.";
     }
 }
-
-
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -341,46 +294,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['adjust_size'])) {
             <input type="number" id="new_size" name="new_size" style="padding: 10px; margin: 10px; width: 300px;" required>
             <button type="submit" name="adjust_size" style="padding: 10px 15px; background-color: darkgreen; color: white; border: none; border-radius: 4px; cursor: pointer;">Adjust</button>
         </form>
+
+        <?php if (isset($adjusted_values)): ?>
+    <div style="margin-top: 20px; background-color: #f9f9f9; padding: 15px; border-radius: 8px; text-align: left;">
+        <h3>Adjusted Values for "<?php echo $adjusted_values['name']; ?>"</h3>
+        <ul style="list-style-type: none; padding-left: 0;">
+            <li><strong>Fats:</strong> <?php echo $adjusted_values['fats']; ?> g</li>
+            <li><strong>Carbs:</strong> <?php echo $adjusted_values['carbs']; ?> g</li>
+            <li><strong>Protein:</strong> <?php echo $adjusted_values['protein']; ?> g</li>
+        </ul>
     </div>
+<?php elseif (isset($error_message)): ?>
+    <p style="color: red;"><?php echo $error_message; ?></p>
+<?php endif; ?>
 
-
-
-<!-- llm created this here, but isnt displaying the calculated ratios -->
-<div class="adjusted-container" style="margin: 20px auto; text-align: center; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-    <h2>Adjusted Recipes</h2>
-    <table style="width: 100%; border-collapse: collapse;">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Fats</th>
-                <th>Carbs</th>
-                <th>Protein</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php
-            // Fetch data from the adjusted table
-            $fetch_adjusted_sql = "SELECT * FROM adjusted";
-            $stmt_adjusted = $pdo->query($fetch_adjusted_sql);
-            $adjusted_recipes = $stmt_adjusted->fetchAll();
-
-            if ($adjusted_recipes):
-                foreach ($adjusted_recipes as $adjusted_recipe): ?>
-                    <tr>
-                        <td><?php echo htmlspecialchars($adjusted_recipe['name']); ?></td>
-                        <td><?php echo htmlspecialchars($adjusted_recipe['fats']); ?></td>
-                        <td><?php echo htmlspecialchars($adjusted_recipe['carbs']); ?></td>
-                        <td><?php echo htmlspecialchars($adjusted_recipe['protein']); ?></td>
-                    </tr>
-                <?php endforeach;
-            else: ?>
-                <tr>
-                    <td colspan="4">No adjusted recipes found.</td>
-                </tr>
-            <?php endif; ?>
-        </tbody>
-    </table>
-</div>
+    </div>
 
 
 </body>
