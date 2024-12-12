@@ -234,7 +234,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <?php if ($recipes): ?>
                         <?php foreach ($recipes as $recipe): ?>
                             <tr>
-                            <tr>
                                 
                                 <td class="hover-cell">
                                     <?php echo htmlspecialchars($recipe['name']); ?>
