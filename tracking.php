@@ -38,6 +38,50 @@ $recipes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 $adjusted_values = null;
 $error_message = null;
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'], $_POST['calories'], $_POST['fats'], $_POST['carbs'], $_POST['protien'], $_POST['ingredients'], $_POST['size'])) {
+    $name = htmlspecialchars($_POST['name']);
+    $calories = (int) $_POST['calories'];
+    $fats = (int) $_POST['fats'];
+    $carbs = (int) $_POST['carbs'];
+    $protien = (int) $_POST['protien'];
+    $ingredients = htmlspecialchars($_POST['ingredients']);
+    $size = (int) $_POST['size'];
+
+    try {
+        $insert_sql = 'INSERT INTO recipes (name, calories, fats, carbs, protien, ingredients, size) VALUES (:name, :calories, :fats, :carbs, :protien, :ingredients, :size)';
+        $stmt = $pdo->prepare($insert_sql);
+        $stmt->execute([
+            ':name' => $name,
+            ':calories' => $calories,
+            ':fats' => $fats,
+            ':carbs' => $carbs,
+            ':protien' => $protien,
+            ':ingredients' => $ingredients,
+            ':size' => $size
+        ]);
+        header("Location: " . $_SERVER['PHP_SELF']);
+        exit; // Prevent further execution after redirect
+    } catch (PDOException $e) {
+        $error_message = "Error adding recipe: " . $e->getMessage();
+    }
+}
+
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_id'])) {
+    $delete_id = (int) $_POST['delete_id'];
+
+    try {
+        $delete_sql = 'DELETE FROM recipes WHERE id = :id';
+        $stmt = $pdo->prepare($delete_sql);
+        $stmt->execute([':id' => $delete_id]);
+        header("Location: " . $_SERVER['PHP_SELF']);
+        exit; // Prevent further execution after redirect
+    } catch (PDOException $e) {
+        $error_message = "Error removing recipe: " . $e->getMessage();
+    }
+}
+
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['adjust_size'])) {
     $recipe_id = (int)$_POST['recipe'];
     $new_size = (int)$_POST['new_size'];
@@ -50,6 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['adjust_size'])) {
 
     if ($selected_recipe) {
         $size_ratio = $new_size / $selected_recipe['size'];
+        $adjusted_calories = round($selected_recipe['calories'] * $size_ratio);
         $adjusted_fats = round($selected_recipe['fats'] * $size_ratio);
         $adjusted_carbs = round($selected_recipe['carbs'] * $size_ratio);
         $adjusted_protein = round($selected_recipe['protien'] * $size_ratio);
@@ -57,6 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['adjust_size'])) {
         // Store adjusted values for displaying
         $adjusted_values = [
             'name' => htmlspecialchars($selected_recipe['name']),
+            'calories' => $adjusted_calories,
             'fats' => $adjusted_fats,
             'carbs' => $adjusted_carbs,
             'protein' => $adjusted_protein
@@ -81,11 +127,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['adjust_size'])) {
             background-color: #f4f4f4;
         }
         .header {
-            background-color: darkgreen;
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
+    background-color: darkgreen;
+    background-image: url('trackingtop.jpg');
+    background-size: cover;
+    background-position: center;
+    background-color: rgba(255, 255, 255, 0.45); /* subtle overlay */
+    background-blend-mode: overlay;
+    color: lightgreen;
+    padding: 20px;
+    text-align: center;
+    text-shadow: 
+        -1px -1px 0 green,
+        1px -1px 0 green,
+        -1px 1px 0 green,
+        1px 1px 0 green; /* creates a green border effect */
+}
+
         .search-bar {
             margin: 20px auto;
             text-align: center;
@@ -201,9 +258,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['adjust_size'])) {
     <div class="header">
         
         <button class="return-button" onclick="location.href='index.php';">Return to Home</button>
-        <h1>Tracking Page</h1>
+        <h1>Recipes</h1>
     </div>
-
+    <style> background-color: rgba(93, 180, 98, 0.7);
+    </style>
     <div class="search-bar">
         <form action="" method="get">
             <input type="text" name="search" placeholder="Search for a recipe..." value="<?php echo htmlspecialchars($search); ?>">
@@ -281,8 +339,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['adjust_size'])) {
         </div>
     </div>
 
-        <div class="ratio-container" style="margin: 20px auto; text-align: center; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-        <h2>Adjust Recipe Size</h2>
+        <div class="ratio-container" style="margin: 20px auto; text-align: center; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); background-image: url('trackingheader.jpg');background-size: cover;
+    background-position: center;
+    background-color: rgba(255, 255, 255, 0.8);background-blend-mode: overlay;">
+        <h2>Exact Recipe Macros</h2>
         <form action="" method="post">
             <label for="recipe">Select Recipe</label>
             <select id="recipe" name="recipe" style="padding: 10px; margin: 10px; width: 300px;">
@@ -290,15 +350,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['adjust_size'])) {
                     <option value="<?php echo $recipe['id']; ?>"><?php echo htmlspecialchars($recipe['name']); ?></option>
                 <?php endforeach; ?>
             </select>
-            <label for="new_size">Enter New Size (grams)</label>
+            <label for="new_size">Enter Weight (grams)</label>
             <input type="number" id="new_size" name="new_size" style="padding: 10px; margin: 10px; width: 300px;" required>
             <button type="submit" name="adjust_size" style="padding: 10px 15px; background-color: darkgreen; color: white; border: none; border-radius: 4px; cursor: pointer;">Adjust</button>
         </form>
 
         <?php if ($adjusted_values): ?>
     <div style="margin-top: 20px; background-color: #ffffff; padding: 20px; border-radius: 10px; text-align: center; max-width: 500px; margin-left: auto; margin-right: auto; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
-        <h3 style="color: darkgreen; margin-bottom: 20px;">Adjusted Values for "<?php echo $adjusted_values['name']; ?>"</h3>
+        <h3 style="color: darkgreen; margin-bottom: 20px;">Exact Weight Macros "<?php echo $adjusted_values['name']; ?>"</h3>
         <ul style="list-style-type: none; padding: 0; margin: 0; font-size: 18px;">
+            <li style="margin: 10px 0;"><strong>Calories:</strong> <?php echo $adjusted_values['calories']; ?></li>
             <li style="margin: 10px 0;"><strong>Fats:</strong> <?php echo $adjusted_values['fats']; ?> g</li>
             <li style="margin: 10px 0;"><strong>Carbs:</strong> <?php echo $adjusted_values['carbs']; ?> g</li>
             <li style="margin: 10px 0;"><strong>Protein:</strong> <?php echo $adjusted_values['protein']; ?> g</li>
@@ -309,7 +370,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['adjust_size'])) {
 <?php endif; ?>
 
     </div>
-gonna create some images to put in
 
 </body>
 </html>
