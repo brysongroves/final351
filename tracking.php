@@ -295,21 +295,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['adjust_size'])) {
             <button type="submit" name="adjust_size" style="padding: 10px 15px; background-color: darkgreen; color: white; border: none; border-radius: 4px; cursor: pointer;">Adjust</button>
         </form>
 
-        <?php if (isset($adjusted_values)): ?>
-    <div style="margin-top: 20px; background-color: #f9f9f9; padding: 15px; border-radius: 8px; text-align: left;">
-        <h3>Adjusted Values for "<?php echo $adjusted_values['name']; ?>"</h3>
-        <ul style="list-style-type: none; padding-left: 0;">
-            <li><strong>Fats:</strong> <?php echo $adjusted_values['fats']; ?> g</li>
-            <li><strong>Carbs:</strong> <?php echo $adjusted_values['carbs']; ?> g</li>
-            <li><strong>Protein:</strong> <?php echo $adjusted_values['protein']; ?> g</li>
+        <?php if ($adjusted_values): ?>
+    <div style="margin-top: 20px; background-color: #ffffff; padding: 20px; border-radius: 10px; text-align: center; max-width: 500px; margin-left: auto; margin-right: auto; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
+        <h3 style="color: darkgreen; margin-bottom: 20px;">Adjusted Values for "<?php echo $adjusted_values['name']; ?>"</h3>
+        <ul style="list-style-type: none; padding: 0; margin: 0; font-size: 18px;">
+            <li style="margin: 10px 0;"><strong>Fats:</strong> <?php echo $adjusted_values['fats']; ?> g</li>
+            <li style="margin: 10px 0;"><strong>Carbs:</strong> <?php echo $adjusted_values['carbs']; ?> g</li>
+            <li style="margin: 10px 0;"><strong>Protein:</strong> <?php echo $adjusted_values['protein']; ?> g</li>
         </ul>
     </div>
-<?php elseif (isset($error_message)): ?>
-    <p style="color: red;"><?php echo $error_message; ?></p>
+<?php elseif ($error_message): ?>
+    <p style="color: red; text-align: center; margin-top: 20px;"><?php echo $error_message; ?></p>
 <?php endif; ?>
 
     </div>
-
+gonna create some images to put in
 
 </body>
 </html>
