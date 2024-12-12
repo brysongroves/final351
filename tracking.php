@@ -326,6 +326,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
     ?>
+    getting data
 </div>
 
 </body>
