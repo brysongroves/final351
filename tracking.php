@@ -155,6 +155,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             background-color: green;
         }
 
+        .return-button {
+            position: absolute;
+            top: 55px;
+            left: 20px;
+            transform: translateY(-50%);
+            background-color: white;
+            color: darkgreen;
+            border: 2px solid darkgreen;
+            border-radius: 8px;
+            padding: 10px 15px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+        .return-button:hover {
+            background-color: lightgreen;
+            color: white;
+        }
+
         .hover-cell {
             position: relative;
         }
@@ -182,6 +201,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <body>
     <div class="header">
+        
+        <button class="return-button" onclick="location.href='index.php';">Return to Home</button>
         <h1>Tracking Page</h1>
     </div>
 

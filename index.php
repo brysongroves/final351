@@ -59,7 +59,7 @@
                 <div class="item" style="width: 190px;">
                     <img src="pasta.jpg" alt="Image 1" style="width: 100%; border-radius: 8px;">
                     <p>Four Cheese Pasta</p>
-                    <?php>
+                    <?php
                     <form action="" method="post">
                     <input type="hidden" name="name" value="Four Cheese Pasta">
                     <input type="hidden" name="calories" value="500">
@@ -90,8 +90,8 @@
                     </div>
                 <div class="item" style="width: 190px;">
                     <img src="glorp.jpg" alt="Image 3" style="width: 100%; border-radius: 8px;">
-                    <p>Zlorpian Stew</p>
-                    <?php>
+                    <p>Zlorpian Stew</p
+                    <?php
                     <form action="" method="post">
                     <input type="hidden" name="name" value="Zlorpian Stew">
                     <input type="hidden" name="calories" value="500">
