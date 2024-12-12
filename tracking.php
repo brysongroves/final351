@@ -160,6 +160,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <!-- created table display and entry box, and had gpt split it into sections and format it -->
 
+finding way to add sleek delete button
+
 <body>
     <div class="header">
         <h1>Tracking Page</h1>
