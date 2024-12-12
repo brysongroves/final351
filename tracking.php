@@ -282,5 +282,51 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </form>
         </div>
     </div>
+
+    <div class="ratio-container" style="margin: 20px auto; text-align: center; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+    <h2>Adjust Recipe Size</h2>
+    <form action="" method="post">
+        <label for="recipe">Select Recipe</label>
+        <select id="recipe" name="recipe" style="padding: 10px; margin: 10px; width: 300px;">
+            <?php foreach ($recipes as $recipe): ?>
+                <option value="<?php echo $recipe['id']; ?>"><?php echo htmlspecialchars($recipe['name']); ?></option>
+            <?php endforeach; ?>
+        </select>
+        <label for="new_size">Enter New Size (grams)</label>
+        <input type="number" id="new_size" name="new_size" style="padding: 10px; margin: 10px; width: 300px;" required>
+        <button type="submit" name="adjust_size" style="padding: 10px 15px; background-color: darkgreen; color: white; border: none; border-radius: 4px; cursor: pointer;">Adjust</button>
+    </form>
+
+    <?php
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['adjust_size'])) {
+        $recipe_id = (int)$_POST['recipe'];
+        $new_size = (int)$_POST['new_size'];
+
+        // Fetch the selected recipe
+        $fetch_recipe_sql = "SELECT * FROM recipes WHERE id = :id";
+        $stmt = $pdo->prepare($fetch_recipe_sql);
+        $stmt->execute(['id' => $recipe_id]);
+        $selected_recipe = $stmt->fetch();
+
+        if ($selected_recipe) {
+            // Calculate new values based on size ratio
+            $size_ratio = $new_size / $selected_recipe['size'];
+            $adjusted_calories = round($selected_recipe['calories'] * $size_ratio);
+            $adjusted_fats = round($selected_recipe['fats'] * $size_ratio);
+            $adjusted_carbs = round($selected_recipe['carbs'] * $size_ratio);
+            $adjusted_protien = round($selected_recipe['protien'] * $size_ratio);
+
+            echo "<h3>Adjusted Values for '{$selected_recipe['name']}'</h3>";
+            echo "<p>Calories: $adjusted_calories</p>";
+            echo "<p>Fats: $adjusted_fats</p>";
+            echo "<p>Carbs: $adjusted_carbs</p>";
+            echo "<p>Protein: $adjusted_protien</p>";
+        } else {
+            echo "<p style='color: red;'>Recipe not found.</p>";
+        }
+    }
+    ?>
+</div>
+
 </body>
 </html>
